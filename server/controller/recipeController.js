@@ -1,4 +1,5 @@
 const model = require('../config/gemini');
+const Recipe = require('../models/Recipe');
 
 const generateRecipe = async (req, res) => {
 
@@ -26,12 +27,84 @@ const generateRecipe = async (req, res) => {
     }
 };
 
-const test = (req, res) => {
-    const {name,city,} = req.body;
-    res.send(`Hello ${name}, you are from ${city}!`);
-}
+const saveRecipe = async (req,res)=>{
+    try {
+
+
+        const { name, description, prepTime, ingredients, instructions } = req.body;
+
+        const existingRecipe = await Recipe.findOne({
+            user:req.user.id,
+            name:name
+        })
+        
+        if(existingRecipe){
+            return res.status(400).json({
+                success:false,
+                message:"Recipe already exist!"
+            })
+        }
+
+        const newRecipe = new Recipe({
+            user:req.user.id,
+            name,
+            description,
+            prepTime,
+            ingredients,
+            instructions
+        });
+
+        const saveRecipe = await newRecipe.save();
+        res.status(201).json({message:'Recipe saved Successfully!',saveRecipe})
+
+    } catch (error) {
+
+        res.status(500).json({ message: "Save karne mein error aaya!", error: error.message });
+
+    }
+};
+
+const getUserRecipe = async(req,res)=>{
+    try {
+        const recipes = await Recipe.find({ user: req.user.id }).sort({ date: -1 });
+        res.json(recipes)
+    } catch (error) {
+        res.status(500).json({ message: "Fetch karne mein error!", error: err.message });
+    }
+};
+
+const deleteRecipe = async (req, res) => {
+    try {
+       
+        const recipe = await Recipe.findById(req.params.id);
+
+        if (!recipe) {
+            return res.status(404).json({ message: "Bhai, ye recipe mili hi nahi!" });
+        }
+
+
+        if (recipe.user.toString() !== req.user.id) {
+            return res.status(401).json({ 
+                message: "Oye! Dusre ki recipe delete karne ki koshish mat kar!" 
+            });
+        }
+
+        await Recipe.findByIdAndDelete(req.params.id);
+
+        res.json({ success: true, message: "Recipe database se saaf ho gayi!" });
+
+    } catch (err) {
+        res.status(500).json({ error: "Delete karte waqt server phat gaya!" });
+    }
+};
+
+
+
 
 module.exports = {
     generateRecipe,
-    test
+    saveRecipe,
+    getUserRecipe,
+    deleteRecipe
+
 };
