@@ -1,13 +1,15 @@
 const express = require('express')
 const router = express.Router();
 
-const {register, login} = require('../controller/authController')
+const {register, login, getMe} = require('../controller/authController');
+const auth = require('../middleware/auth');
 
 router.post('/register',register);
 router.post('/login',login);
 router.get('/logout',(req,res)=>{
     res.clearCookie('token').json({message:'Logout Successfull!'})
 })
+router.get("/me", auth, getMe);
 
 
 module.exports = router;

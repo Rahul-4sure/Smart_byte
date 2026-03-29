@@ -4,6 +4,9 @@ const Recipe = require('../models/Recipe');
 const generateRecipe = async (req, res) => {
 
     const { ingredients } = req.body;
+    if (!ingredients || ingredients.length === 0) {
+        return res.status(400).json({ success: false, message: "No Ingredients found" });
+    }
 
     try {
         
@@ -16,14 +19,22 @@ const generateRecipe = async (req, res) => {
         
         // Kabhi kabhi AI ```json ... ``` bhej deta hai, use saaf karne ke liye:
         text = text.replace(/```json|```/g, "").trim();
+
+        const recipeData = JSON.parse(text);
         
-        res.json(JSON.parse(text));
+        res.json({
+            success:true,
+            recipe:recipeData
+        });
 
     } catch (error) {
 
 
         console.error("Error:", error);
-        res.status(500).json({ message: "AI logic mein error!", error: error.message });
+        res.status(500).json({ 
+            success:false,
+            message: "Error!", 
+            error: error.message });
     }
 };
 
@@ -54,12 +65,17 @@ const saveRecipe = async (req,res)=>{
             instructions
         });
 
-        const saveRecipe = await newRecipe.save();
-        res.status(201).json({message:'Recipe saved Successfully!',saveRecipe})
+        const saveData = await newRecipe.save();
+        res.status(201).json({
+            success:true,
+            message:'Recipe saved Successfully!',recipe:saveData})
 
     } catch (error) {
 
-        res.status(500).json({ message: "Save karne mein error aaya!", error: error.message });
+        console.error('Save Error:', error.message);
+        res.status(500).json({
+            success:false,
+            message: "Save karne mein error aaya!", error: error.message });
 
     }
 };
@@ -67,9 +83,15 @@ const saveRecipe = async (req,res)=>{
 const getUserRecipe = async(req,res)=>{
     try {
         const recipes = await Recipe.find({ user: req.user.id }).sort({ date: -1 });
-        res.json(recipes)
+        res.json({
+            success: true,
+            recipes: recipes
+        });
     } catch (error) {
-        res.status(500).json({ message: "Fetch karne mein error!", error: err.message });
+        res.status(500).json({ 
+            success: false, 
+            message: "Fetch karne mein error!", 
+            error: error.message });
     }
 };
 
