@@ -135,7 +135,7 @@ export default function HomePage() {
               SmartByte
             </span>
           </div>
-          <p className="text-stone-700 text-xs">© 2025 SmartByte</p>
+          <p className="text-stone-700 text-xs">© 2026 SmartByte</p>
         </div>
       </footer>
 

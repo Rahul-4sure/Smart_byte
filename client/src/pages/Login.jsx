@@ -219,7 +219,7 @@ export default function LoginPage() {
                 Signing in...
               </>
             ) : (
-              "Sign In"
+              "Login"
             )}
           </button>
 

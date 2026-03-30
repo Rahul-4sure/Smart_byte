@@ -55,7 +55,7 @@ export default function SignupPage() {
       id: "name",
       label: "Full Name",
       type: "text",
-      placeholder: "John Doe",
+      placeholder: "Bhupendra jogi",
       icon: (color) => (
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
           <circle cx="8" cy="5" r="3" stroke={color} strokeWidth="1.2" />
@@ -67,7 +67,7 @@ export default function SignupPage() {
       id: "email",
       label: "Email",
       type: "email",
-      placeholder: "you@example.com",
+      placeholder: "Bhupendrajogi@example.com",
       icon: (color) => (
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
           <path d="M2 4C2 3.45 2.45 3 3 3H13C13.55 3 14 3.45 14 4V12C14 12.55 13.55 13 13 13H3C2.45 13 2 12.55 2 12V4Z" stroke={color} strokeWidth="1.2" />
@@ -172,7 +172,7 @@ export default function SignupPage() {
           <p className="text-center text-stone-500 text-xs mt-6">
             Already have an account?{" "}
             <Link to="/login" className="text-amber-500 hover:text-amber-400 font-medium">
-              Sign in
+              Login
             </Link>
           </p>
         </div>
