@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import API from "../api/axios";
 import { LogOut, UtensilsCrossed, Sparkles } from "lucide-react";
+import Navbar from "../components/Navbar";
+import RecipeSearch from "../components/RecipeSearch";
 
 export default function Dashboard() {
   const [saving,setSaving] = useState(false);
@@ -13,7 +15,7 @@ export default function Dashboard() {
   const [savedRecipies,setsavedRecipies] = useState ([]);     
   
   const navigate = useNavigate();
-  // View more
+  
   const handleView = (data) => {
   setRecipe(data);
   window.scrollTo({
@@ -22,7 +24,7 @@ export default function Dashboard() {
   });
 };
   
-  // old saved recipes lane wala function
+  
   const fecthSavedRecipies = async ()=>{
     try {
       const res = await API.get('/recipes/my-recipes');
@@ -35,7 +37,7 @@ export default function Dashboard() {
     }
   }
 
-  // Recipe Generate karne wala function
+  
   const handleGenerate = async () => {
     if (!inputText) return alert("Pehle ingredients toh likho bhai!");
 
@@ -93,7 +95,7 @@ export default function Dashboard() {
   const handleLogout = async () => {
     try {
       await API.get("/auth/logout");
-      navigate("/login");
+      navigate("/");
     } catch (err) {
       alert("Logout fail ho gaya!");
     }
@@ -115,7 +117,7 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-stone-950 text-stone-100 relative overflow-hidden">
-      {/* Background effects — same as your design */}
+     
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-40 -left-40 w-96 h-96 rounded-full bg-amber-500 opacity-5 blur-3xl" />
         <div className="absolute -bottom-40 -right-40 w-96 h-96 rounded-full bg-orange-400 opacity-5 blur-3xl" />
@@ -144,73 +146,23 @@ export default function Dashboard() {
 
       <div className="h-px bg-linear-to-r from-transparent via-amber-500 to-transparent" />
 
-      <header className="relative max-w-6xl mx-auto px-6 py-5 flex justify-between items-center border-b border-stone-800/60">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 bg-amber-500 rounded-md flex items-center justify-center shrink-0">
-            <UtensilsCrossed size={15} className="text-stone-950" />
-          </div>
-          <div>
-            <span className="text-stone-100 font-semibold text-sm tracking-widest uppercase block">
-              SmartByte
-            </span>
-            <p className="text-stone-500 text-xs">
-              Welcome back,{" "}
-              <span className="text-amber-400 font-medium">{user?.name}</span>
-            </p>
-          </div>
-        </div>
-        <button
-          onClick={handleLogout}
-          className="flex items-center gap-2 bg-stone-900 border border-stone-800 px-4 py-2 rounded-lg transition-all text-sm"
-        >
-          <LogOut size={15} /> <span className="tracking-wide">Logout</span>
-        </button>
-      </header>
+      <Navbar user={user} onLogout={handleLogout} />
 
       <main className="relative max-w-6xl mx-auto px-6 py-16">
-        {/* Hero Search section */}
-        <div className="max-w-2xl mx-auto text-center mb-16">
-          <div className="inline-flex items-center gap-1.5 bg-amber-500/10 border border-amber-500/20 rounded-full px-3 py-1 mb-6">
-            <Sparkles size={11} className="text-amber-400" />
-            <span className="text-amber-400 text-xs tracking-widest uppercase font-medium">
-              AI Powered
-            </span>
-          </div>
-          <h2 className="text-4xl font-bold text-stone-50 mb-3">
-            Kya pakana hai aaj?
-          </h2>
-          <p className="text-stone-500 text-sm mb-8">
-            Jo ingredients paas ho batao — hum recipe suggest karenge
-          </p>
+       
+        <RecipeSearch
+          inputText={inputText}
+          setInputText={setInputText}
+          onGenerate={handleGenerate}
+          generating={generating}
+        />
 
-          {/* Search bar - Value and OnClick Added */}
-          <div className="relative">
-            <div className="absolute inset-0 rounded-2xl bg-amber-500/5 blur-xl" />
-            <div className="relative bg-stone-900 border border-stone-800 rounded-2xl shadow-2xl flex items-center gap-3 px-5 py-1">
-              <input
-                type="text"
-                value={inputText}
-                onChange={(e) => setInputText(e.target.value)}
-                placeholder="e.g. Paneer, Tomato, Onion..."
-                className="flex-1 bg-transparent text-stone-100 placeholder-stone-600 py-3.5 text-sm outline-none"
-              />
-              <button
-                onClick={handleGenerate}
-                disabled={generating}
-                className="shrink-0 bg-amber-500 hover:bg-amber-400 text-stone-950 p-2.5 rounded-xl hover:scale-105 active:scale-95 transition-all disabled:opacity-50"
-              >
-                {generating ? "..." : <Sparkles size={18} />}
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Recipe Content Section */}
+        
         <div className="max-w-2xl mx-auto">
           <div className="h-px bg-linear-to-r from-transparent via-stone-800 to-transparent mb-10" />
 
           {recipe ? (
-            /* Yahan Recipe Card Ayega (Same as your UI style) */
+            
             <div className="bg-stone-900 border border-stone-800 p-8 rounded-3xl shadow-2xl animate-in fade-in slide-in-from-bottom-4 duration-500">
               <h3 className="text-2xl font-bold text-amber-500 mb-2">
                 {recipe.name}
@@ -273,7 +225,7 @@ export default function Dashboard() {
               </button>
             </div>
           ) : (
-            /* Empty state - Jo tumne banaya tha */
+            
             <div className="text-center">
               <div className="w-12 h-12 rounded-xl border border-stone-800 bg-stone-900 flex items-center justify-center mx-auto mb-4">
                 <UtensilsCrossed size={20} className="text-stone-700" />
@@ -285,7 +237,7 @@ export default function Dashboard() {
           )}
         </div>
 
-        {/* Saved Data section */}
+        
 
         <div className="mt-24 max-w-4xl mx-auto">
           <h3 className="text-stone-100 font-semibold text-sm tracking-widest uppercase mb-8 flex items-center gap-3">
@@ -314,8 +266,9 @@ export default function Dashboard() {
                       ⏳ {r.prepTime}
                     </span>
                     <button
-                    onClick={() => handleView(r)}
-                    className="text-[10px] text-amber-500 font-bold uppercase tracking-tighter hover:underline">
+                      onClick={() => handleView(r)}
+                      className="text-[10px] text-amber-500 font-bold uppercase tracking-tighter hover:underline"
+                    >
                       View Details
                     </button>
                   </div>
@@ -331,6 +284,7 @@ export default function Dashboard() {
           )}
         </div>
       </main>
+
       <div className="fixed bottom-0 inset-x-0 h-px bg-linear-to-r from-transparent via-amber-500/30 to-transparent" />
     </div>
   );

@@ -17,7 +17,7 @@ const generateRecipe = async (req, res) => {
         const response = result.response;
         let text = response.text();
         
-        // Kabhi kabhi AI ```json ... ``` bhej deta hai, use saaf karne ke liye:
+        
         text = text.replace(/```json|```/g, "").trim();
 
         const recipeData = JSON.parse(text);
