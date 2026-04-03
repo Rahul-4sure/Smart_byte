@@ -94,7 +94,8 @@ export default function Dashboard() {
 
   const handleLogout = async () => {
     try {
-      await API.get("/auth/logout");
+      await API.post("/auth/logout");
+      setUser(null);
       navigate("/");
     } catch (err) {
       alert("Logout fail ho gaya!");
