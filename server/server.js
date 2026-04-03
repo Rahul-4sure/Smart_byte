@@ -13,7 +13,7 @@ const app = express()
 app.use(cookieParser());
 app.use(express.json());
 app.use(cors({
-  origin:'http://localhost:5173',
+  origin:['http://localhost:5173','https://smart-byte-eight.vercel.app'],
   credentials:true
 }));
 
@@ -27,6 +27,10 @@ app.use((err, req, res, next) => {
     res.status(500).json({ success: false, message: "Server mein kuch fatt gaya!" });
 });
 
-app.listen(port,() => {
-  console.log(`Example app listening on port ${port}`)
-})
+app.get('/', (req, res) => {
+    res.send("Server is running!");
+});
+
+app.listen(port, () => {
+    console.log(`Example app listening on port ${port}`);
+});
