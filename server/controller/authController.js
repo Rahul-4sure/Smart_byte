@@ -92,16 +92,19 @@ exports.login = async(req,res)=>{
       {expiresIn:'1h'}
     );
 
-    res.cookie('token',token,{
-      httpOnly:true,
-      secure:false,
-      maxAge:3600000
-    }).json({
-      success: true,
-      token,
-      message: "Login successful!",
-      user: { id: user._id, name: user.name }
-    })
+    res
+      .cookie("token", token, {
+        httpOnly: true,
+        secure: true, 
+        sameSite: "none", 
+        maxAge: 24 * 60 * 60 * 1000, 
+      })
+      .json({
+        success: true,
+        token,
+        message: "Login successful!",
+        user: { id: user._id, name: user.name },
+      });
   } catch (error) {
 
     console.log(error.message);
