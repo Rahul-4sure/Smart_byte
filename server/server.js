@@ -12,9 +12,12 @@ const app = express()
 
 app.use(cookieParser());
 app.use(express.json());
+
 app.use(cors({
-  origin:['http://localhost:5173','https://smart-byte-client-zeta.vercel.app'],
-  credentials:true
+  origin: "https://smart-byte-client-zeta.vercel.app",
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"]
 }));
 
 const port = process.env.PORT || 5000;
