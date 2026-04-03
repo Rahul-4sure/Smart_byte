@@ -16,9 +16,10 @@ app.use(express.json());
 app.use(cors({
   origin: "https://smart-byte-client-zeta.vercel.app",
   credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  allowedHeaders: ["Content-Type", "Authorization"]
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], 
+  allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With", "Accept"] 
 }));
+
 
 const port = process.env.PORT || 5000;
 
